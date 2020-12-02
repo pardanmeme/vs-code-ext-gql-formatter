@@ -9,7 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - command - k hello
 - command - k now
 
-## [0.0.1] - 2020-12-01
+## [0.0.1] - 2020-12-02
 ### Added
 - commands
   - helloWorld
