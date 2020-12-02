@@ -47,8 +47,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     let needsFormatted = false;
     for (let i = 0; i < gql.length; i++) {
-      console.log(i, '[' + gql[i] + ']');
-      console.log(i, '[' + formattedLines[i] + ']');
       if (gql[i].trim().length) {
         needsFormatted = needsFormatted || gql[i] !== formattedLines[i];
       }
@@ -69,15 +67,6 @@ export function activate(context: vscode.ExtensionContext) {
     gql?: { start: Position, lines: string[] },
   ): void {
     if (index >= document.lineCount) {
-      // const results = accumulated.map(async a => {
-        // return await vscode.workspace.applyEdit(a)
-      // });
-      // Promise.all(results).then(arrayOfResults => {
-        // const failedCount = arrayOfResults.filter(b => !b).length;
-        // const failedMsg = failedCount ? ` failed = ${failedCount}` : '';
-        // vscode.window.showInformationMessage("GQL Formats = " + accumulated.length + failedMsg);
-      // });
-
       const init: boolean[] = [];
       accumulated.reduce((a, i) => {
         return a.then(chainResults =>
