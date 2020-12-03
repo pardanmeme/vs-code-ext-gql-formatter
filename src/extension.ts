@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Position, Range, WorkspaceEdit } from 'vscode';
 const endOfLine = require('os').EOL;
 
-import { indentConfigValue } from './configuration';
+import { indentConfigValue, nameConfigValue } from './configuration';
 
 
 type UserConfig = {
@@ -13,7 +13,10 @@ export function activate(context: vscode.ExtensionContext) {
 
   let helloWorld = vscode.commands.registerCommand(
     'normanstypczynski.helloWorld',
-    () => { vscode.window.showInformationMessage("Ken's first extension just helped you!") }
+    () => {
+      const name = nameConfigValue();
+      vscode.window.showInformationMessage(`${name}'s first extension just helped you!`);
+    }
   );
   context.subscriptions.push(helloWorld);
 
@@ -29,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
   ));
 
 
-  const frmtCommand: string = 'normanstypczynski.formatter.gql.string';
+  const frmtCommand: string = 'normanstypczynski.formatGqlString';
 
   function frmt(gql: string[], indent: number, eol: string = endOfLine): string {
     const trimmed = gql.map((line) => line.trimLeft());
@@ -118,7 +121,7 @@ export function activate(context: vscode.ExtensionContext) {
     const { activeTextEditor } = vscode.window;
 
     if (activeTextEditor && (activeTextEditor.document.languageId === 'typescriptreact' || activeTextEditor.document.languageId === 'typescript')) {
-      const indent = indentConfigValue(6);
+      const indent = indentConfigValue();
 
       const { document } = activeTextEditor;
       return formatGQLstrings({ indent }, document, 0, []);
