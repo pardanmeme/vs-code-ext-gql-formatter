@@ -16,5 +16,8 @@ All notable changes to the __gqlformatter__ extension will be documented in this
   - TS
   - TSX
 
+## [0.0.2] - 2020-12-03
+### Changed the version
+- need to know how to update the extension
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
