@@ -1,9 +1,9 @@
 {
-  "publisher": "normanstypczynski",
+  "publisher": "normanstypczynskipublisher",
   "icon": "icon.png",
 	"name": "gqlformatter",
 	"displayName": "gql formatter",
-	"description": "command to format gql in currently open tsx file",
+	"description": "command to format gql in currently open ts or tsx file",
   "version": "0.0.1",
   "repository": {
     "type": "git",
