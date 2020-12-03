@@ -23,11 +23,15 @@
 		"commands": [
 			{
 				"command": "normanstypczynski.helloWorld",
-				"title": "k hello"
+				"title": "ns hello"
       },
       {
         "command": "normanstypczynski.informCurrentTime",
-        "title": "k now"
+        "title": "ns now"
+      },
+      {
+        "command": "normanstypczynski.formatGqlString",
+        "title": "ns format gql string"
       }
     ],
     "keybindings":[
@@ -40,10 +44,32 @@
         "key": "shift+alt+cmd+k n"
       },
       {
-        "command": "normanstypczynski.formatter.gql.string",
+        "command": "normanstypczynski.formatGqlString",
         "key": "shift+alt+cmd+k q"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "gqlFormatter",
+      "properties": {
+        "normanstypczynski.formatGqlString.tabSize": {
+          "description": "the amount to indent for each level",
+          "type": "number",
+          "default": 6
+        },
+        "normanstypczynski.helloWorld.name": {
+          "markdownDescription": "Wanna take credit?  Norman's ok with that.  Here's a link `#normanstypczynski.formatGqlString.tabSize#` to another command.",
+          "type": "string",
+          "default": "Norman"
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [{
+        "command": "normanstypczynski.formatGqlString",
+        "group": "1_modification",
+        "when": "editorTextFocus && editorLangId == typescript || editorLangId == typescriptreact"
+      }]
+    }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",

@@ -1,3 +1,6 @@
+# Preface
+This extension in not intended for the general public.  It has been made public to facilitate collaboration and learning so we may one day bring you something more useful.
+
 # gql formatter command README
 
 This extension adds a command to VS Code that will fix the indentions inside a gql string.
@@ -16,7 +19,7 @@ It will correct the indentions of a gql string in the open file when:
 This extension contributes the following settings:
 
 _Tab Size_
-* `kinc.command.format.gql.indent`
+* `normanstypczynski.formatGqlString.tabSize`
 * `editor.tabSize`
 * 6
 
@@ -31,5 +34,5 @@ They have not yet been removed.
 
 | CMD   | DESC |
 |-------|------|
-|k hello|produces an info notification with a static message.|
-|k now  |produces an warning notification with the current time.|
+|ns hello|produces an info notification with a static message.|
+|ns now  |produces an warning notification with the current time.|
