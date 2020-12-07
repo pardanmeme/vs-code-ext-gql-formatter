@@ -48,8 +48,6 @@ export const LIST_THINGS = gql`
 
 ## Known Issues
 
-There is no update functionality.  To update, uninstall and reinstall using the new vsix.
-
 ## Additional
 
 2 commands are included that were in the tutorial.
