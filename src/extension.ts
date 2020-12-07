@@ -66,23 +66,34 @@ export function activate(context: vscode.ExtensionContext) {
     userConfig: UserConfig,
     document: vscode.TextDocument,
     index: number,
-    accumulated: WorkspaceEdit[],
+    edits: number,
+    edit: WorkspaceEdit,
     gql?: { start: Position, lines: string[] },
   ): void {
     if (index >= document.lineCount) {
-      const init: boolean[] = [];
-      accumulated.reduce((a, i) => {
-        return a.then(chainResults =>
-          vscode.workspace.applyEdit(i).then(currentResult =>
-            [...chainResults, currentResult]
-          )
-        )
-      }, Promise.resolve(init)).then(arrayOfResults => {
-        const failedCount = arrayOfResults.filter(b => !b).length;
-        const failedMsg = failedCount ? ` failed = ${failedCount}` : '';
-        vscode.window.showInformationMessage("GQL Formats = " + accumulated.length + failedMsg);
-      });
+      if (edit.has(document.uri)) {
+        vscode.workspace.applyEdit(edit).then(result => {
+          const failedMsg = result ? "" : " with failure.";
+          vscode.window.showInformationMessage("GQL Formats = " + edits + failedMsg);
+        });
+      } else {
+        vscode.window.showInformationMessage("GQL Formats = None");
+      }
       return;
+
+      // const init: boolean[] = [];
+      // accumulated.reduce((a, i) => {
+      //   return a.then(chainResults =>
+      //     vscode.workspace.applyEdit(i).then(currentResult =>
+      //       [...chainResults, currentResult]
+      //     )
+      //   );
+      // }, Promise.resolve(init)).then(arrayOfResults => {
+      //   const failedCount = arrayOfResults.filter(b => !b).length;
+      //   const failedMsg = failedCount ? ` failed = ${failedCount}` : '';
+      //   vscode.window.showInformationMessage("GQL Formats = " + accumulated.length + failedMsg);
+      // });
+      // return;
     }
 
     const line = document.lineAt(index);
@@ -90,10 +101,10 @@ export function activate(context: vscode.ExtensionContext) {
     if (!gql) {
       const open = 'gql`';
       if ((!line.text.startsWith('const') && !line.text.startsWith('export const')) || !line.text.includes(open)) {
-        return formatGQLstrings(userConfig, document, index + 1, accumulated, gql);
+        return formatGQLstrings(userConfig, document, index + 1, edits, edit, gql);
       } else {
         const startPosition = new Position(line.range.start.line, line.text.indexOf(open) + open.length);
-        return formatGQLstrings(userConfig, document, index + 1, accumulated, {
+        return formatGQLstrings(userConfig, document, index + 1, edits, edit, {
           start: startPosition,
           lines: [line.text.substr(startPosition.character)]
         });
@@ -102,17 +113,17 @@ export function activate(context: vscode.ExtensionContext) {
       const close = '`';
       if (line.text.startsWith('#') || !line.text.includes(close)) {
         gql.lines.push(line.text);
-        return formatGQLstrings(userConfig, document, index + 1, accumulated, gql);
+        return formatGQLstrings(userConfig, document, index + 1, edits, edit, gql);
       } else {
         gql.lines.push('');
         const frmted = frmt(gql.lines, userConfig.indent);
         if (frmted.length) {
           const endPosition = new Position(line.range.start.line, line.text.indexOf(close));
-          const edit = new WorkspaceEdit();
           edit.replace(document.uri, new Range(gql.start, endPosition), frmted);
-          accumulated.push(edit);
+          return formatGQLstrings(userConfig, document, index + 1, edits + 1, edit);
+        } else {
+          return formatGQLstrings(userConfig, document, index + 1, edits, edit);
         }
-        return formatGQLstrings(userConfig, document, index + 1, accumulated);
       }
     }
   }
@@ -124,9 +135,9 @@ export function activate(context: vscode.ExtensionContext) {
       const indent = indentConfigValue();
 
       const { document } = activeTextEditor;
-      return formatGQLstrings({ indent }, document, 0, []);
+      return formatGQLstrings({ indent }, document, 0, 0, new WorkspaceEdit());
     }
-  })
+  });
 
   // vs code says this is better, but I can't use it to EXTEND the current formatter?
   // vscode.languages.registerDocumentFormattingEditProvider('typescript', {

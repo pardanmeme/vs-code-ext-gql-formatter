@@ -20,4 +20,17 @@ All notable changes to the __gqlformatter__ extension will be documented in this
 ### Changed the version
 - need to know how to update the extension
 
+## [0.0.3] - 2020-12-07
+### Changed
+|CHANGE|formatGqlString|
+|-|-|
+|BEFORE|Each corrected string was a single edit.  This means that if the formatGqlString command corrected 3 strings, it would require 3 undos to get back to the initial state.|
+|AFTER|All GQL strings are updated as a single edit.  This means a single undo gets you back to the initial state.|
+
+
+
+
+
+
+
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
