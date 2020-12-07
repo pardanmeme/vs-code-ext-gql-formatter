@@ -1,5 +1,5 @@
 # Preface
-This extension in not intended for the general public.  It has been made public to facilitate collaboration and learning so we may one day bring you something more useful.
+This extension in not really intended for the general public.  It has been made public to facilitate collaboration and learning so we may one day bring you something more useful.
 
 # gql formatter command README
 
@@ -22,6 +22,30 @@ _Tab Size_
 * `normanstypczynski.formatGqlString.tabSize`
 * `editor.tabSize`
 * 6
+
+## Example
+assuming `normanstypczynski.formatGqlString.tabSize: 4`:
+```javascript
+export const LIST_THINGS = gql`
+query ListThing {
+listThing {
+                              id
+name
+}
+}
+`;
+```
+would become
+```javascript
+export const LIST_THINGS = gql`
+    query ListThing {
+        listThing {
+            id
+            name
+        }
+    }
+`;
+```
 
 ## Known Issues
 
