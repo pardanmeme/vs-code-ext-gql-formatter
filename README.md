@@ -20,8 +20,7 @@ This extension contributes the following settings:
 
 _Tab Size_
 * `normanstypczynski.formatGqlString.tabSize`
-* `editor.tabSize`
-* 6
+* default: 6
 
 ## Example
 assuming `normanstypczynski.formatGqlString.tabSize: 4`:
