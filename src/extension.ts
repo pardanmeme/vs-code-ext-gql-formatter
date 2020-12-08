@@ -2,37 +2,35 @@ import * as vscode from 'vscode';
 import { Position, Range, WorkspaceEdit } from 'vscode';
 const endOfLine = require('os').EOL;
 
-import { indentConfigValue, nameConfigValue } from './configuration';
+import { indentConfigValue } from './configuration';
 
 
 type UserConfig = {
-    indent: number
+    tabSize: number
 };
+
+function getUserConfig(): UserConfig {
+    return { tabSize: indentConfigValue() };
+}
 
 export function activate(context: vscode.ExtensionContext) {
 
-    let helloWorld = vscode.commands.registerCommand(
-        'normanstypczynski.helloWorld',
+    const command_echoSettings = 'normanstypczynski.gqlformatter.echo.settings';
+
+    let sqlFormatterEchoSettings = vscode.commands.registerCommand(
+        command_echoSettings,
         () => {
-            const name = nameConfigValue();
-            vscode.window.showInformationMessage(`${name}'s first extension just helped you!`);
+            vscode.window.showInformationMessage(JSON.stringify(
+                getUserConfig(),
+                undefined,
+                1
+            ));
         }
     );
-    context.subscriptions.push(helloWorld);
+    context.subscriptions.push(sqlFormatterEchoSettings);
 
 
-    context.subscriptions.push(vscode.commands.registerCommand(
-        'normanstypczynski.informCurrentTime',
-        () => {
-            // console shows up in the DEBUG CONSOLE
-            console.log(`${new Date()}`);
-            console.error('errors can be logged here.');
-            vscode.window.showWarningMessage(`${new Date()}`);
-        }
-    ));
-
-
-    const frmtCommand: string = 'normanstypczynski.formatGqlString';
+    const command_frmtGqlString: string = 'normanstypczynski.gqlformatter.formatGqlString';
 
     function frmt(gql: string[], indent: number, eol: string = endOfLine): string {
         const trimmed = gql.map((line) => line.trimLeft());
@@ -80,27 +78,15 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showInformationMessage("GQL Formats = None");
             }
             return;
-
-            // const init: boolean[] = [];
-            // accumulated.reduce((a, i) => {
-            //   return a.then(chainResults =>
-            //     vscode.workspace.applyEdit(i).then(currentResult =>
-            //       [...chainResults, currentResult]
-            //     )
-            //   );
-            // }, Promise.resolve(init)).then(arrayOfResults => {
-            //   const failedCount = arrayOfResults.filter(b => !b).length;
-            //   const failedMsg = failedCount ? ` failed = ${failedCount}` : '';
-            //   vscode.window.showInformationMessage("GQL Formats = " + accumulated.length + failedMsg);
-            // });
-            // return;
         }
 
         const line = document.lineAt(index);
 
         if (!gql) {
             const open = 'gql`';
-            if ((!line.text.startsWith('const') && !line.text.startsWith('export const')) || !line.text.includes(open)) {
+            const validStarts = ['const', 'export const'];
+            if (!validStarts.some(validStart => line.text.startsWith(validStart)) ||
+                !line.text.includes(open)) {
                 return formatGQLstrings(userConfig, document, index + 1, edits, edit, gql);
             } else {
                 const startPosition = new Position(line.range.start.line, line.text.indexOf(open) + open.length);
@@ -111,12 +97,13 @@ export function activate(context: vscode.ExtensionContext) {
             }
         } else {
             const close = '`';
-            if (line.text.startsWith('#') || !line.text.includes(close)) {
+            const comment = '#';
+            if (line.text.startsWith(comment) || !line.text.includes(close)) {
                 gql.lines.push(line.text);
                 return formatGQLstrings(userConfig, document, index + 1, edits, edit, gql);
             } else {
                 gql.lines.push('');
-                const frmted = frmt(gql.lines, userConfig.indent);
+                const frmted = frmt(gql.lines, userConfig.tabSize);
                 if (frmted.length) {
                     const endPosition = new Position(line.range.start.line, line.text.indexOf(close));
                     edit.replace(document.uri, new Range(gql.start, endPosition), frmted);
@@ -128,29 +115,17 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }
 
-    vscode.commands.registerCommand(frmtCommand, () => {
+    vscode.commands.registerCommand(command_frmtGqlString, () => {
         const { activeTextEditor } = vscode.window;
+        const supportedLanguages = ['typescript', 'typescriptreact'];
 
-        if (activeTextEditor && (activeTextEditor.document.languageId === 'typescriptreact' || activeTextEditor.document.languageId === 'typescript')) {
-            const indent = indentConfigValue();
-
+        if (activeTextEditor && supportedLanguages.includes(activeTextEditor.document.languageId)) {
             const { document } = activeTextEditor;
-            return formatGQLstrings({ indent }, document, 0, 0, new WorkspaceEdit());
+            const userConfig = getUserConfig();
+            return formatGQLstrings(userConfig, document, 0, 0, new WorkspaceEdit());
         }
     });
 
-    // vs code says this is better, but I can't use it to EXTEND the current formatter?
-    // vscode.languages.registerDocumentFormattingEditProvider('typescript', {
-    //   provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
-    //     const comment = "// Partially formatted using Kens gql formatting extension";
-    //     const firstLine = document.lineAt(0);
-    //     if (firstLine.text !== comment) {
-    //       return [vscode.TextEdit.insert(firstLine.range.start, comment)];
-    //     } else {
-    //       return [];
-    //     }
-    //   }
-    // })
 }
 
 export function deactivate() { }

@@ -1,10 +1,11 @@
 {
     "publisher": "normanstypczynskipublisher",
+    "license": "MIT",
     "icon": "icon.png",
     "name": "gqlformatter",
     "displayName": "gql formatter",
     "description": "command to format gql in currently open ts or tsx file",
-    "version": "0.0.3",
+    "version": "1.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/pardanmeme/vs-code-ext-gql-formatter.git"
@@ -22,51 +23,38 @@
     "contributes": {
         "commands": [
             {
-                "command": "normanstypczynski.helloWorld",
-                "title": "ns hello"
+                "command": "normanstypczynski.gqlformatter.echo.settings",
+                "title": "ns gqlformatter echo settings"
             },
             {
-                "command": "normanstypczynski.informCurrentTime",
-                "title": "ns now"
-            },
-            {
-                "command": "normanstypczynski.formatGqlString",
-                "title": "ns format gql string"
+                "command": "normanstypczynski.gqlformatter.formatGqlString",
+                "title": "ns gqlformatter format gql"
             }
         ],
         "keybindings": [
             {
-                "command": "normanstypczynski.helloWorld",
-                "key": "shift+alt+cmd+k h"
+                "command": "normanstypczynski.gqlformatter.echo.settings",
+                "key": "shift+alt+cmd+n s"
             },
             {
-                "command": "normanstypczynski.informCurrentTime",
-                "key": "shift+alt+cmd+k n"
-            },
-            {
-                "command": "normanstypczynski.formatGqlString",
-                "key": "shift+alt+cmd+k q"
+                "command": "normanstypczynski.gqlformatter.formatGqlString",
+                "key": "shift+alt+cmd+n q"
             }
         ],
         "configuration": {
             "title": "gqlFormatter",
             "properties": {
-                "normanstypczynski.formatGqlString.tabSize": {
+                "normanstypczynski.gqlformatter.formatGqlString.tabSize": {
                     "description": "the amount to indent for each level",
                     "type": "number",
                     "default": 6
-                },
-                "normanstypczynski.helloWorld.name": {
-                    "markdownDescription": "Wanna take credit?  Norman's ok with that.  Here's a link `#normanstypczynski.formatGqlString.tabSize#` to another command.",
-                    "type": "string",
-                    "default": "Norman"
                 }
             }
         },
         "menus": {
             "editor/context": [
                 {
-                    "command": "normanstypczynski.formatGqlString",
+                    "command": "normanstypczynski.gqlformatter.formatGqlString",
                     "group": "1_modification",
                     "when": "editorTextFocus && editorLangId == typescript || editorLangId == typescriptreact"
                 }

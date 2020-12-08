@@ -1,12 +1,5 @@
 import { workspace, WorkspaceConfiguration } from 'vscode';
 
-export function nameConfigValue(): string {
-    return myConfig().get<string>(
-        'helloWorld.name',
-        'Norman'
-    );
-}
-
 export function indentConfigValue(): number {
     return getInt(
         myConfig().get('formatGqlString.tabSize'),
@@ -16,7 +9,7 @@ export function indentConfigValue(): number {
 
 
 function myConfig(): WorkspaceConfiguration {
-    return workspace.getConfiguration('normanstypczynski');
+    return workspace.getConfiguration('normanstypczynski.gqlformatter');
 }
 
 function getInt(v: string | undefined, orElse: number): number {
