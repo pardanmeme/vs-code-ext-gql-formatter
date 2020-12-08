@@ -2,13 +2,7 @@
 
 All notable changes to the __gqlformatter__ extension will be documented in this file.
 
-
-
 ## [Unreleased]
-### Removed
-- command - ns hello
-- command - ns now
-
 
 ## [0.0.1] - 2020-12-02
 ### Added
@@ -27,10 +21,17 @@ All notable changes to the __gqlformatter__ extension will be documented in this
 |BEFORE|Each corrected string was a single edit.  This means that if the formatGqlString command corrected 3 strings, it would require 3 undos to get back to the initial state.|
 |AFTER|All GQL strings are updated as a single edit.  This means a single undo gets you back to the initial state.|
 
+## [1.0.0] - 2020-12-08
+### Removed
+- command - ns hello
+- command - ns now
 
+### Changed
+- format gql command
+  - name to __normanstypczynski.gqlformatter.formatGqlString__
+  - title to __ns gqlformatter format gql__
+  - keyboard shortcut to __shift+alt+cmd+n q__
 
-
-
-
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Added
+- command - ns gqlformatter echo settings
+- MIT license

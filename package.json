@@ -1,101 +1,91 @@
 {
-  "publisher": "normanstypczynskipublisher",
-  "icon": "icon.png",
-	"name": "gqlformatter",
-	"displayName": "gql formatter",
-	"description": "command to format gql in currently open ts or tsx file",
-  "version": "0.0.3",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pardanmeme/vs-code-ext-gql-formatter.git"
-  },
-	"engines": {
-		"vscode": "^1.51.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"*"
-	],
-	"main": "./dist/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "normanstypczynski.helloWorld",
-				"title": "ns hello"
-      },
-      {
-        "command": "normanstypczynski.informCurrentTime",
-        "title": "ns now"
-      },
-      {
-        "command": "normanstypczynski.formatGqlString",
-        "title": "ns format gql string"
-      }
-    ],
-    "keybindings":[
-      {
-        "command": "normanstypczynski.helloWorld",
-        "key": "shift+alt+cmd+k h"
-      },
-      {
-        "command": "normanstypczynski.informCurrentTime",
-        "key": "shift+alt+cmd+k n"
-      },
-      {
-        "command": "normanstypczynski.formatGqlString",
-        "key": "shift+alt+cmd+k q"
-      }
-    ],
-    "configuration": {
-      "title": "gqlFormatter",
-      "properties": {
-        "normanstypczynski.formatGqlString.tabSize": {
-          "description": "the amount to indent for each level",
-          "type": "number",
-          "default": 6
-        },
-        "normanstypczynski.helloWorld.name": {
-          "markdownDescription": "Wanna take credit?  Norman's ok with that.  Here's a link `#normanstypczynski.formatGqlString.tabSize#` to another command.",
-          "type": "string",
-          "default": "Norman"
-        }
-      }
+    "publisher": "normanstypczynskipublisher",
+    "license": "MIT",
+    "icon": "icon.png",
+    "name": "gqlformatter",
+    "displayName": "gql formatter",
+    "description": "command to format gql in currently open ts or tsx file",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pardanmeme/vs-code-ext-gql-formatter.git"
     },
-    "menus": {
-      "editor/context": [{
-        "command": "normanstypczynski.formatGqlString",
-        "group": "1_modification",
-        "when": "editorTextFocus && editorLangId == typescript || editorLangId == typescriptreact"
-      }]
+    "engines": {
+        "vscode": "^1.51.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "normanstypczynski.gqlformatter.echo.settings",
+                "title": "ns gqlformatter echo settings"
+            },
+            {
+                "command": "normanstypczynski.gqlformatter.formatGqlString",
+                "title": "ns gqlformatter format gql"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "normanstypczynski.gqlformatter.echo.settings",
+                "key": "shift+alt+cmd+n s"
+            },
+            {
+                "command": "normanstypczynski.gqlformatter.formatGqlString",
+                "key": "shift+alt+cmd+n q"
+            }
+        ],
+        "configuration": {
+            "title": "gqlFormatter",
+            "properties": {
+                "normanstypczynski.gqlformatter.formatGqlString.tabSize": {
+                    "description": "the amount to indent for each level",
+                    "type": "number",
+                    "default": 6
+                }
+            }
+        },
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "normanstypczynski.gqlformatter.formatGqlString",
+                    "group": "1_modification",
+                    "when": "editorTextFocus && editorLangId == typescript || editorLangId == typescriptreact"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "webpack --devtool nosources-source-map --config ./build/node-extension.webpack.config.js",
+        "watch": "webpack --watch --devtool nosources-source-map --info-verbosity verbose --config ./build/node-extension.webpack.config.js",
+        "package": "webpack --mode production --config ./build/node-extension.webpack.config.js",
+        "test-compile": "tsc -p ./",
+        "test-watch": "tsc -watch -p ./",
+        "pretest": "npm run test-compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.51.0",
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.0.0",
+        "@types/node": "^12.11.7",
+        "eslint": "^7.9.0",
+        "@typescript-eslint/eslint-plugin": "^4.1.1",
+        "@typescript-eslint/parser": "^4.1.1",
+        "glob": "^7.1.6",
+        "mocha": "^8.1.3",
+        "typescript": "^4.0.2",
+        "vscode-test": "^1.4.0",
+        "ts-loader": "^8.0.3",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12"
     }
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run package",
-		"compile": "webpack --devtool nosources-source-map --config ./build/node-extension.webpack.config.js",
-		"watch": "webpack --watch --devtool nosources-source-map --info-verbosity verbose --config ./build/node-extension.webpack.config.js",
-		"package": "webpack --mode production --config ./build/node-extension.webpack.config.js",
-		"test-compile": "tsc -p ./",
-		"test-watch": "tsc -watch -p ./",
-		"pretest": "npm run test-compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.51.0",
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.0.0",
-		"@types/node": "^12.11.7",
-		"eslint": "^7.9.0",
-		"@typescript-eslint/eslint-plugin": "^4.1.1",
-		"@typescript-eslint/parser": "^4.1.1",
-		"glob": "^7.1.6",
-		"mocha": "^8.1.3",
-		"typescript": "^4.0.2",
-		"vscode-test": "^1.4.0",
-		"ts-loader": "^8.0.3",
-		"webpack": "^4.44.1",
-		"webpack-cli": "^3.3.12"
-	}
 }
