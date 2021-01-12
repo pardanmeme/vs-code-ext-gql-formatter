@@ -31,7 +31,7 @@ generates:
       - typescript-react-apollo
 ```
 
-In types.ts, you'll see some gql
+In types.ts, you'll see some generated gql
 ```javascript
 export const ThingsDocument = gql`
     query Things {
