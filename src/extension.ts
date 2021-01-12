@@ -102,7 +102,12 @@ export function activate(context: vscode.ExtensionContext) {
                 gql.lines.push(line.text);
                 return formatGQLstrings(userConfig, document, index + 1, edits, edit, gql);
             } else {
-                gql.lines.push('');
+                const quoteIndex = line.text.indexOf(close);
+                const beforeQuote = line.text.substring(0, quoteIndex);
+                gql.lines.push(beforeQuote);
+                if (beforeQuote.trim().length) {
+                    gql.lines.push('');
+                }
                 const frmted = frmt(gql.lines, userConfig.tabSize);
                 if (frmted.length) {
                     const endPosition = new Position(line.range.start.line, line.text.indexOf(close));
