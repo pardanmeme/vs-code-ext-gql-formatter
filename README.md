@@ -4,7 +4,7 @@ This extension adds a command to VS Code that will fix the indentions inside a g
 You can use it from an open editor tab.  File types supported are ts and tsx.
 
 ## Possible Use Case
-Are you're using https://graphql-code-generator.com/?
+Are you using https://graphql-code-generator.com/?
 
 Try this on the page
 
