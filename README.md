@@ -1,7 +1,7 @@
 # gql formatter command
 
 This extension adds a command to VS Code that will fix the indentions inside a gql string.
-You can use it from an open editor tab.  File types supported are ts, tsx, gql, graphql.
+You can use it from an open editor tab.  File types supported are ts, tsx, gql and graphql.
 
 ## Possible Use Case
 Are you using https://graphql-code-generator.com/?
