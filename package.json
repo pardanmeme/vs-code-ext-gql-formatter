@@ -5,7 +5,7 @@
     "name": "gqlformatter",
     "displayName": "gql formatter",
     "description": "command to format gql in currently open ts or tsx file",
-    "version": "1.0.1",
+    "version": "1.1.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/pardanmeme/vs-code-ext-gql-formatter.git"
@@ -48,6 +48,16 @@
                     "description": "the amount to indent for each level",
                     "type": "number",
                     "default": 6
+                },
+                "normanstypczynski.gqlformatter.enable.graphql": {
+                    "description": "enables formatting in gql files",
+                    "type": "boolean",
+                    "default": false
+                },
+                "normanstypczynski.gqlformatter.allow.trailing.comment": {
+                    "description": "matches an open curly as the end of a line even if followed by a space and a pound sign",
+                    "type": "boolean",
+                    "default": false
                 }
             }
         },
@@ -56,7 +66,7 @@
                 {
                     "command": "normanstypczynski.gqlformatter.formatGqlString",
                     "group": "1_modification",
-                    "when": "editorTextFocus && editorLangId == typescript || editorLangId == typescriptreact"
+                    "when": "editorTextFocus && editorLangId == typescript || editorLangId == typescriptreact || editorLangId == graphql"
                 }
             ]
         }

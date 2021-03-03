@@ -5,6 +5,15 @@ All notable changes to the __gqlformatter__ extension will be documented in this
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.1] - 2021-03-03
+
+### Added
+- language support for gql and graphql
+  - to enable it set *normanstypczynski.gqlformatter.enable.graphql* to true
+- trailing comment after open curly is ok.  E.G. createThing(input: $input) { # Thing
+  - to enable it set *normanstypczynski.gqlformatter.allow.trailing.comment* to true
+
+
 ## [1.0.1] - 2021-01-11
 
 ### Fixed
