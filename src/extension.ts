@@ -2,15 +2,21 @@ import * as vscode from 'vscode';
 import { Position, Range, WorkspaceEdit } from 'vscode';
 const endOfLine = require('os').EOL;
 
-import { indentConfigValue } from './configuration';
+import { indentConfigValue, supportGQLConfigValue, supportTrailingCommentConfigValue } from './configuration';
 
 
 type UserConfig = {
-    tabSize: number
+    tabSize: number,
+    isGQL: boolean,
+    isTrailingComments: boolean,
 };
 
 function getUserConfig(): UserConfig {
-    return { tabSize: indentConfigValue() };
+    return {
+        tabSize: indentConfigValue(),
+        isGQL: supportGQLConfigValue(),
+        isTrailingComments: supportTrailingCommentConfigValue(),
+    };
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -32,15 +38,21 @@ export function activate(context: vscode.ExtensionContext) {
 
     const command_frmtGqlString: string = 'normanstypczynski.gqlformatter.formatGqlString';
 
-    function frmt(gql: string[], indent: number, eol: string = endOfLine): string {
+    function frmt(
+        gql: string[],
+        indent: number,
+        isTrailingCommentOK: boolean,
+        initialIndent: number = 0,
+        eol: string = endOfLine
+    ): string {
         const trimmed = gql.map((line) => line.trimLeft());
-        let dent = indent;
+        let dent = initialIndent;
         const formattedLines = trimmed.map((line) => {
             if (line.startsWith('}')) {
                 dent -= indent;
             }
             const formatted = ''.padStart(dent, ' ') + line;
-            if (formatted.endsWith('{')) {
+            if (formatted.endsWith('{') || (isTrailingCommentOK && formatted.includes('{ #'))) {
                 dent += indent;
             }
             return formatted;
@@ -108,7 +120,12 @@ export function activate(context: vscode.ExtensionContext) {
                 if (beforeQuote.trim().length) {
                     gql.lines.push('');
                 }
-                const frmted = frmt(gql.lines, userConfig.tabSize);
+                const frmted = frmt(
+                    gql.lines,
+                    userConfig.tabSize,
+                    userConfig.isTrailingComments,
+                    userConfig.tabSize
+                );
                 if (frmted.length) {
                     const endPosition = new Position(line.range.start.line, line.text.indexOf(close));
                     edit.replace(document.uri, new Range(gql.start, endPosition), frmted);
@@ -120,14 +137,48 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }
 
+    function formatGQLfile(
+        userConfig: UserConfig,
+        document: vscode.TextDocument,
+    ): void {
+        if (document.lineCount) {
+            const frmted = frmt(
+                document.getText().split(endOfLine),
+                userConfig.tabSize,
+                userConfig.isTrailingComments,
+            );
+            if (frmted.length) {
+                const lastline = document.lineAt(document.lineCount - 1);
+                const edit = new WorkspaceEdit();
+                edit.replace(document.uri, new Range(
+                    new Position(0, 0), lastline.range.end),
+                    frmted,
+                );
+                vscode.workspace.applyEdit(edit).then(result => {
+                    const failedMsg = result ? "" : " with failure.";
+                    vscode.window.showInformationMessage("Formatted GQL file " + failedMsg);
+                });
+            } else {
+                vscode.window.showInformationMessage("GQL File is already formatted");
+            }
+        }
+    }
+
     vscode.commands.registerCommand(command_frmtGqlString, () => {
         const { activeTextEditor } = vscode.window;
-        const supportedLanguages = ['typescript', 'typescriptreact'];
 
-        if (activeTextEditor && supportedLanguages.includes(activeTextEditor.document.languageId)) {
+        if (activeTextEditor) {
             const { document } = activeTextEditor;
-            const userConfig = getUserConfig();
-            return formatGQLstrings(userConfig, document, 0, 0, new WorkspaceEdit());
+            switch (activeTextEditor.document.languageId) {
+                case 'typescript':
+                case 'typescriptreact':
+                    return formatGQLstrings(getUserConfig(), document, 0, 0, new WorkspaceEdit());
+                case 'graphql':
+                    const userConfig = getUserConfig();
+                    if (userConfig.isGQL) {
+                        return formatGQLfile(getUserConfig(), document);
+                    }
+            }
         }
     });
 
